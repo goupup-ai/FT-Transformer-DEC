@@ -1,0 +1,110 @@
+config:
+  paths:
+    static_csv: "./Data/methods1_resuscitated_enriched_icustaylabs_with_gcs.csv"
+    events_csv: "./Data/time_series_data.csv"
+    output_dir: "outputs/"
+    model_path: "outputs/mrm_pretrain/mrm_pretrained.pt"
+
+  feature:
+    patient_id_col: "stay_id"
+    time_col: "hour_index"
+    cont_cols:
+      - heart_rate
+      - resp_rate
+      # - temperature
+      - sbp
+      - dbp
+      - map
+      - fio2
+      - ph
+      - pco2
+      - po2
+      - hco3
+      - lactate
+      - sao2
+      - base_excess
+      - tco2
+      - sodium
+      - potassium
+      - chloride
+      - calcium
+      - hemoglobin
+      - hematocrit
+      # - norepinephrine
+      # - dopamine
+      # - epinephrine
+      - vasopressin
+      # - phenylephrine
+      - in_volume_ml_hr
+      - crystalloid_in_ml_hr
+      - colloid_in_ml_hr
+      - out_volume_ml_hr
+      - urine_output_ml_hr
+      - pf_ratio
+      - anion_gap
+    cat_cols: []
+    static_cont_cols:
+      - admission_age
+      - charlson_comorbidity_index
+      - height
+      - weight
+      - sofa
+      - sapsii
+      - oasis
+      - total_mv_hours
+      - crrt_hours
+      - icu_los_hours
+      - icu_first_gcs_total
+    static_cat_cols:
+      - gender
+      - ventilated
+      - crrt_used
+      - hospital_expire_flag
+      - mortality_28d_post_discharge
+      - icu_first_gcs_source
+
+  model:
+    n_clusters: 4
+    d_model: 128
+    max_seq_len: 128
+    ft_kwargs:
+      d_block: 192
+      n_blocks: 4
+      attention_n_heads: 8
+      attention_dropout: 0.1
+      ffn_dropout: 0.1
+    time_transformer_cfg:
+      n_heads: 4
+      n_layers: 2
+      dim_feedforward: 256
+      dropout: 0.1
+      use_time_scalar: true
+    d_model: 128
+    max_seq_len: 128
+    ft_kwargs:
+      d_block: 192
+      n_blocks: 4
+      attention_n_heads: 8
+      attention_dropout: 0.1
+      ffn_dropout: 0.1
+    time_transformer_cfg:
+      n_heads: 4
+      n_layers: 2
+      dim_feedforward: 256
+      dropout: 0.1
+      use_time_scalar: true
+
+  training:
+    batch_size: 32
+    device: "cpu"
+
+  mrm:
+    n_epochs: 50
+    lr: 1.0e-3
+    mask_ratio: 0.2
+    save_every: 10
+
+  dec:
+    n_epochs: 20
+    save_every: 10
+    lr: 1.0e-5
